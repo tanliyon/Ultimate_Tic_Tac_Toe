@@ -1,1 +1,1 @@
-"Ultimate Tic Tac Toe" 
+Ultimate tic-tac-toe with variety of bots

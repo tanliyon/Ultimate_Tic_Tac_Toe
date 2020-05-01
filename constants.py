@@ -1,0 +1,7 @@
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+X_COL = (88, 169, 245)
+O_COL = (245, 88, 88)
+OFFSET = 10
+RIGHT_DIAG = (2, 4, 6)
+LEFT_DIAG = (0, 4, 8)

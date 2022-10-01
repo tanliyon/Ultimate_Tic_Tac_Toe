@@ -1,14 +1,7 @@
 import sys, pygame
 import constants
-from enum import Enum
-
-class State(Enum):
-	X = 1
-	O = -1
-	VALID = 0
-	INVALID = 2
-	DRAW = 3
-
+from constants import State
+from utils import win, draw
 
 class Board:
 	def __init__(self, size):
@@ -56,9 +49,9 @@ class Board:
 				pygame.draw.circle(self.screen, constants.O_COL, (x+(self.W//18), y+(self.H//18)), (self.W//18)-constants.OFFSET, 2)
 
 			self._update_board(small_grid, big_grid)
-			if self._win(self.big_grid, big_grid):
+			if win(self.big_grid, big_grid, self.turn):
 				self.winner = self.turn
-			elif self._draw(self.big_grid):
+			elif draw(self.big_grid):
 				self.winner = State.DRAW
 
 			self.turn = State.X if self.turn == State.O else State.O
@@ -84,17 +77,8 @@ class Board:
 		self.screen.blit(text2, (self.W//2 - textRect2.width//2, self.H//2 - textRect2.height//2 + 23))
 		pygame.display.flip()
 
-	def get_moves(self):
-		moves = {}
-
-		for i in range(9):
-			if self.big_grid[i] == State.VALID:
-				moves[i] = []
-				for j in range(9):
-					if self.small_grid[i][j] == State.VALID:
-						moves[i].append(j)
-
-		return moves
+	def get_state(self):
+		return self.small_grid, self.big_grid
 
 	def isrunning(self):
 		return self.winner == State.VALID or self.winner == State.INVALID
@@ -106,13 +90,13 @@ class Board:
 		self.small_grid[big_grid][small_grid] = self.turn
 
 		# Check if a certain big_grid is won
-		win = self._win(self.small_grid[big_grid], small_grid)
-		if win:
-			self._draw_win(win, small_grid, big_grid)
+		win_status = win(self.small_grid[big_grid], small_grid, self.turn)
+		if win_status:
+			self._draw_win(win_status, small_grid, big_grid)
 			self.big_grid[big_grid] = self.turn
 
 		# Check if the big_grid is drawn
-		elif self._draw(self.small_grid[big_grid]):
+		elif draw(self.small_grid[big_grid]):
 			self.big_grid[big_grid] = State.DRAW
 
 		# Limit play to only the big grid selected by the small grid
@@ -139,30 +123,6 @@ class Board:
 		small_grid = (row%3)*3 + column%3
 		big_grid = (row//3)*3 + column//3
 		return small_grid, big_grid
-
-	def _win(self, grid, pos):
-		row = pos // 3
-		col = pos % 3
-		
-		# Check horizontal, vertical then diagonals
-		if grid[row*3 + col] == grid[row*3 + (col+1)%3] == grid[row*3 + (col+2)%3] == self.turn:
-			return "row"
-		elif grid[row*3 + col] == grid[((row+1)%3)*3 + col] == grid[((row+2)%3)*3 + col] == self.turn:
-			return "col"
-		elif (pos in constants.RIGHT_DIAG) and (grid[row*3 + col] == grid[((row-1)%3)*3 + (col+1)%3] == grid[((row-2)%3)*3 + (col+2)%3] == self.turn):
-			return "/_diag"
-		elif (pos in constants.LEFT_DIAG) and (grid[row*3 + col] == grid[((row+1)%3)*3 + (col+1)%3] == grid[((row+2)%3)*3 + (col+2)%3] == self.turn):
-			return "\\_diag"
-
-		return ""
-
-	def _draw(self, grid):
-		for i in range(9):
-			if grid[i] == State.VALID or grid[i] == State.INVALID:
-				return False
-
-		return True
-
 
 	def _draw_win(self, win, small_grid, big_grid):
 		x = (big_grid%3 * self.W//3) + (small_grid%3 * self.W//9)

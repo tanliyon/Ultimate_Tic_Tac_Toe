@@ -1,7 +1,9 @@
 import time
 import pygame
-from board import Board, State
+from board import Board
+from constants import State
 from random_ai import RandomAI
+from minimax_ai import MinimaxAI
 
 SIZE = (640, 640)
 
@@ -9,13 +11,14 @@ if __name__ == "__main__":
 	first = True
 	board = Board(SIZE)
 	board.init(first=first)
-	ai = RandomAI()
+	rand_ai = RandomAI()
+	minimax_ai = MinimaxAI(4)
 
 	running = True
 
 	while running:
-		if board.AI_turn():
-			ai.move(board)
+		if board.AI_turn() and board.isrunning():
+			minimax_ai.move(board)
 		else:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:

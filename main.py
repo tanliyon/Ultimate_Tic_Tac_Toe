@@ -1,9 +1,9 @@
 import time
 import pygame
 from board import Board
-from constants import State
-from random_ai import RandomAI
-from minimax_ai import MinimaxAI
+from utils.constants import State
+from ai.random_ai import RandomAI
+from ai.minimax_ai import MinimaxAI
 
 SIZE = (640, 640)
 

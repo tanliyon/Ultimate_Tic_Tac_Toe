@@ -1,7 +1,7 @@
-import sys, pygame
-import constants
-from constants import State
-from utils import win, draw
+import pygame
+import utils.constants as constants
+from utils.constants import State
+from utils.utils import win, draw
 
 class Board:
 	def __init__(self, size):

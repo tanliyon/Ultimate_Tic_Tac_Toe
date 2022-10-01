@@ -1,5 +1,4 @@
-import random
-from constants import State
+from utils.constants import State
 from utils import win, draw
 
 class AI:

@@ -1,5 +1,5 @@
-import constants
-from constants import State
+import utils.constants as constants
+from utils.constants import State
 
 def win(grid, pos, turn):
 	row = pos // 3

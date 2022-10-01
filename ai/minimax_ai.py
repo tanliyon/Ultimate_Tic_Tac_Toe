@@ -1,5 +1,5 @@
 from ai import AI
-from constants import State
+from utils.constants import State
 import copy
 import numpy as np
 import random
